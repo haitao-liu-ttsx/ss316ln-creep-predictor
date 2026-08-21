@@ -1,0 +1,15 @@
+# Render.com 部署配置（免费层即可）
+# 1) 把本项目推送到 GitHub 私有仓库
+# 2) 在 render.com 新建 Blueprint / Web Service 选择本仓库
+# 3) 按下方配置（或直接使用本 render.yaml）
+services:
+  - type: web
+    name: ss316ln-creep-predictor
+    runtime: python
+    buildCommand: |
+      cd webapp/frontend && npm install && npm run build && cd ../.. && pip install -r webapp/backend/requirements.txt
+    startCommand: gunicorn --chdir webapp/backend app:app -b 0.0.0.0:$PORT --workers 1 --timeout 120
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0

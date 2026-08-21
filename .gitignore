@@ -1,0 +1,46 @@
+# ---- 大目录/非部署文件（排除）----
+webapp/frontend/node_modules/
+webapp/frontend/dist/
+ml/.venv/
+simulation/
+data/
+abaqus/
+geometry/
+loads/
+materials/
+postprocess/
+validation/
+316LN/
+ml/data/
+ml/metrics/
+ml/models/
+ml/final/
+ml/predictions/
+ml/figures/
+ml/features/
+ml/v13/viz/
+
+# ---- 大文件类型 ----
+*.odb
+*.inp
+*.msg
+*.dat
+*.sta
+*.com
+*.prt
+*.lck
+*.stt
+*.npz.tmp
+
+# ---- 系统/编辑器 ----
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# ---- 部署需要的文件清单（勿删，GitHub Desktop 发布前请确认以下存在）----
+# webapp/backend/app.py, requirements.txt
+# webapp/frontend/{src,package.json,package-lock.json,vite.config.ts,tsconfig.json,index.html}
+# ml/v13/models/*.joblib, ml/v13/predictor.py, domain_guard.py, global_ranges.json, domain_guard_train_coverage.json
+# ml/production/step15_v1_2/model/*, ml/production/step15_v1_2/runtime/predict_field.py
+# render.yaml

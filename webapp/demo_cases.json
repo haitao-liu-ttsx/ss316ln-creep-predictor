@@ -1,0 +1,9 @@
+{
+  "cases": [
+    {"name": "Demo Case 1（基准几何 300h）", "T": 600, "P": 20, "t": 300, "Rm": 100, "Ro": 20, "w": 4},
+    {"name": "Demo Case 2（Rm150 3000h）", "T": 650, "P": 20, "t": 3000, "Rm": 150, "Ro": 20, "w": 4},
+    {"name": "Demo Case 3（非基准几何高应力 3000h）", "T": 650, "P": 25, "t": 3000, "Rm": 120, "Ro": 25, "w": 3},
+    {"name": "Demo Case 4（OOD: T=700°C）", "T": 700, "P": 10, "t": 100, "Rm": 100, "Ro": 20, "w": 4}
+  ],
+  "note": "Case 4 为 OUT_OF_DOMAIN 演示（700/750°C DATA_REQUIRED）"
+}

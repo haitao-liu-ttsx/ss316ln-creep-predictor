@@ -1,0 +1,96 @@
+{
+ "model_version": "STEP15-v1.2",
+ "architecture": "POD(log10 CEEQ, k=3) + Poly2/Ridge modal regression + log10(P*Ro/w)",
+ "training_data": "87 cases (37 old t<=300h + 50 new: 48x3000h + 2x1000h); TRAIN 68 / VAL 19",
+ "pod": {
+  "domain": "log10(CEEQ)",
+  "k": 3,
+  "basis": "TRAIN-only"
+ },
+ "feature_schema": [
+  "T",
+  "P",
+  "log1p_time",
+  "Rm",
+  "Ro",
+  "w",
+  "E",
+  "A_creep",
+  "n_creep",
+  "log10(P*Ro/w)"
+ ],
+ "checksums": {
+  "pod": "e58a5c34c60dcdc497ff897df67a1f78e968e7c0d78cba3187015c8a4b1000bb",
+  "scaler": "879f32e39df5ab896095614afb572d6d90eab9c8318baa7ce0cce8e34fc3d7ae",
+  "config": "a7aee18de1e229a0c08c6db7aaf829e13623e7148479fe7334de7fca6691e1a5",
+  "mode1": "a3d0c74a58d8efc4405432f8c6dcc3a477b7a82692588ea0f43493898b8177ea",
+  "mode2": "e9b7f5547deb63c44a6bd06993984856d951ed4f61d2f199a792978043b9a9e9",
+  "mode3": "9a3aab0d6f3c97518c460be66cdef7b4981b3ce9b705f995cdbf0f689090d520"
+ },
+ "production_domain": {
+  "T": [
+   550,
+   650
+  ],
+  "P": [
+   2.5,
+   30
+  ],
+  "t": [
+   1,
+   3000
+  ],
+  "Rm": [
+   80,
+   150
+  ],
+  "Ro": [
+   15,
+   25
+  ],
+  "w": [
+   2,
+   5
+  ],
+  "stress_scale_max": 250
+ },
+ "out_of_domain_rules": [
+  "T>650 or T<550: OUT_OF_DOMAIN (DATA_REQUIRED above 650)",
+  "t>3000: OUT_OF_DOMAIN",
+  "P>30: OUT_OF_DOMAIN",
+  "P*Ro/w>250: OUT_OF_DOMAIN"
+ ],
+ "ext27_validation": {
+  "logMAE": 0.0314,
+  "logR2": 0.9998,
+  "relL2": 0.148,
+  "hotspot": "27/27",
+  "physics_violations": 0,
+  "t3000_logMAE": 0.0378,
+  "t3000_logR2": 0.9996,
+  "geo_120_25_3_logMAE": 0.0678
+ },
+ "g4_validation_status": {
+  "freeze": "v1.2 poly10 FROZEN",
+  "ext_evaluated": 27,
+  "ext_target_read": "YES (post-freeze once)",
+  "locked_test_read": "NO",
+  "318_modified": "NO",
+  "v11_modified": "NO",
+  "post_ext_retraining": "NO",
+  "post_ext_selection": "NO",
+  "checksums": {
+   "pod": "e58a5c34c60dcdc497ff897df67a1f78e968e7c0d78cba3187015c8a4b1000bb",
+   "mode1": "a3d0c74a58d8efc4405432f8c6dcc3a477b7a82692588ea0f43493898b8177ea",
+   "mode2": "e9b7f5547deb63c44a6bd06993984856d951ed4f61d2f199a792978043b9a9e9",
+   "mode3": "9a3aab0d6f3c97518c460be66cdef7b4981b3ce9b705f995cdbf0f689090d520",
+   "config": "a7aee18de1e229a0c08c6db7aaf829e13623e7148479fe7334de7fca6691e1a5",
+   "318": "20f21ebc67ea",
+   "locked": "fa573e330926"
+  }
+ },
+ "train_val_usage": "TRAIN/VAL used for training/selection",
+ "ext27_usage": "external validation only (once, post-freeze)",
+ "locked20_usage": "NEVER read (checksum fa573e330926 protected)",
+ "creation_timestamp_utc": "2026-08-20T10:38:02Z"
+}

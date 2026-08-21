@@ -1,0 +1,9 @@
+{
+ "topology": {
+  "nodes": 3072,
+  "elements": 2304,
+  "type": "C3D8R"
+ },
+ "mapping": "deterministic torus mesh, element order = POD field index",
+ "coordinates": "element centroids (x,y,z) of requested geometry"
+}

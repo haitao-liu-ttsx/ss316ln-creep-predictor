@@ -1,0 +1,16 @@
+{
+  "name": "SS316LN toroidal CEEQ field AI web app",
+  "model_source": "ml/production/step15_v1_2/ (FROZEN, sole model source)",
+  "architecture": "Flask backend + React/TS/Vite/Three.js frontend",
+  "api": "POST /api/predict {T,P,t,Rm,Ro,w} -> field[2304]+metrics+validity; /api/health",
+  "domain_guard": "reuses production predict_field validate_input (T 550-650, P 2.5-30, t 1-3000, Rm 80-150, Ro 15-25, w 2-5, P*Ro/w<=250)",
+  "physics_guard": "CEEQ>=0, finite; physics_status PASS/WARNING",
+  "deterministic_test": "web-vs-production max_abs_diff = 0.0 (12/12 tests PASS)",
+  "frontend": {"build": "npm run build (dist/)", "dev": "npm run dev (5173, proxy /api -> 5000)"},
+  "backend": "python app.py (127.0.0.1:5000)",
+  "demo_cases": "webapp/demo_cases.json (4 cases incl. OOD demo)",
+  "constraints": {"LOCKED_TEST": "never read", "318_dataset": "unchanged",
+                  "v12_frozen_model": "unchanged", "new_abaqus_cases": "none",
+                  "retraining": "none"},
+  "status": "STEP17_WEBAPP COMPLETE"
+}

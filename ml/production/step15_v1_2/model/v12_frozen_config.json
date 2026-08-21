@@ -1,0 +1,23 @@
+{
+ "model": "poly10: Ridge-Poly2 on log10(P*Ro/w)-augmented features",
+ "pod": {
+  "domain": "log10(CEEQ)",
+  "k": 3,
+  "basis": "TRAIN-only"
+ },
+ "features": [
+  "T",
+  "P",
+  "log1p_time",
+  "Rm",
+  "Ro",
+  "w",
+  "E",
+  "A_creep",
+  "n_creep",
+  "log10(P*Ro/w)"
+ ],
+ "time_treatment": "log1p(t) inside Poly2 (no analytic term; 3000h in training coverage)",
+ "seed": 42,
+ "status": "FROZEN v1.2"
+}

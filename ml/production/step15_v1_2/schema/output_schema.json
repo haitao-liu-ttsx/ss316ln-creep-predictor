@@ -1,0 +1,15 @@
+{
+ "ceeq_field": {
+  "shape": [
+   2304
+  ],
+  "type": "element-centroid CEEQ"
+ },
+ "max_ceeq": "float",
+ "mean_ceeq": "float",
+ "p95_ceeq": "float",
+ "hotspot_element": "int (0-2303)",
+ "pod_coefficients": "[3]",
+ "validity": "VALID|OUT_OF_DOMAIN",
+ "mesh": "48x16x3 torus (3072 nodes)"
+}

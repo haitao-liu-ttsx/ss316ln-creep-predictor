@@ -1,0 +1,54 @@
+{
+ "inputs": [
+  {
+   "name": "T",
+   "unit": "degC",
+   "range": [
+    550,
+    650
+   ]
+  },
+  {
+   "name": "P",
+   "unit": "MPa",
+   "range": [
+    2.5,
+    30
+   ]
+  },
+  {
+   "name": "t",
+   "unit": "h",
+   "range": [
+    1,
+    3000
+   ]
+  },
+  {
+   "name": "Rm",
+   "unit": "mm",
+   "range": [
+    80,
+    150
+   ]
+  },
+  {
+   "name": "Ro",
+   "unit": "mm",
+   "range": [
+    15,
+    25
+   ]
+  },
+  {
+   "name": "w",
+   "unit": "mm",
+   "range": [
+    2,
+    5
+   ]
+  }
+ ],
+ "derived": "log10(P*Ro/w)",
+ "stress_scale_max": 250
+}
