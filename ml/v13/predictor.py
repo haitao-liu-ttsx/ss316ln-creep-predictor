@@ -1,9 +1,10 @@
-"""STEP21-D: V1.3 unified prediction API.
+"""STEP22: V1.3 316LN creep field predictor (single-file deployable).
 Input: T(°C), P(MPa), t(h), Rm/Ro/w(mm). Output: 7 fields (2304) + von Mises
 + centroids + summary + domain status. Models loaded once (module cache).
-All fitting artifacts are FROZEN (TRAIN-only); inference only.
+Self-contained: torus mesh + global color ranges + domain coverage inlined
+(no external data files needed besides the 7 model joblibs).
 """
-import json
+import math
 import os
 import sys
 import time
@@ -19,20 +20,54 @@ E_T = {550: 155020.0, 600: 150780.0, 650: 171000.0, 700: 141000.0, 750: 119000.0
 CREEP = {550: (7.75e-32, 9.51), 600: (3.56e-30, 9.04), 650: (2.35e-25, 7.57),
          700: (2.92e-22, 6.97), 750: (2.78e-18, 5.56)}
 
-_cache = {'models': None, 'guard': None, 'mesh': None}
-
-
-_global_ranges_cache = None
+# ---- frozen per-field global ranges (absolute-scale colormap; all 230 cases) ----
+GLOBAL_RANGES = {
+    'Srr': [0.47, 87.71], 'Stt': [0.47, 87.70], 'Szz': [-7.33, 109.04],
+    'Srt': [-18.51, 18.51], 'Srz': [-37.29, 37.29], 'Stz': [-37.29, 37.29],
+    'von_mises': [17.94, 156.78],
+    'CEEQ_log10': [-8.5, -1.5],
+}
 
 
 def _global_ranges():
-    """Frozen per-field global value ranges over all 230 cases (absolute-scale colormap).
-    Loaded once; not part of model math."""
-    global _global_ranges_cache
-    if _global_ranges_cache is None:
-        with open(os.path.join(HERE, 'global_ranges.json')) as f:
-            _global_ranges_cache = json.load(f)
-    return _global_ranges_cache
+    return GLOBAL_RANGES
+
+
+def torus_mesh(Rm, Ro, wall, nt=48, np_=16, nw=3):
+    """2304 element centroids of the torus (same ordering as Abaqus pipeline)."""
+    Ri = Ro - wall
+    nodes = []
+    for kk in range(nw + 1):
+        r = Ri + (Ro - Ri) * kk / nw
+        for j in range(np_):
+            phi = 2 * math.pi * j / np_
+            for i in range(nt):
+                theta = 2 * math.pi * i / nt
+                cx, cy = Rm * math.cos(theta), Rm * math.sin(theta)
+                er = (math.cos(theta), math.sin(theta), 0.0)
+                ez = (0.0, 0.0, 1.0)
+                nodes.append([cx + r * (math.cos(phi) * er[0] + math.sin(phi) * ez[0]),
+                              cy + r * (math.cos(phi) * er[1] + math.sin(phi) * ez[1]),
+                              r * (math.cos(phi) * er[2] + math.sin(phi) * ez[2])])
+    nodes = np.array(nodes)
+
+    def nid(a, b, c):
+        return 1 + a + nt * (b + np_ * c)
+
+    centroids = []
+    for kk in range(nw):
+        for j in range(np_):
+            jp = (j + 1) % np_
+            for i in range(nt):
+                ip = (i + 1) % nt
+                ids = [nid(i, j, kk), nid(ip, j, kk), nid(ip, jp, kk),
+                       nid(i, jp, kk), nid(i, j, kk + 1), nid(ip, j, kk + 1),
+                       nid(ip, jp, kk + 1), nid(i, jp, kk + 1)]
+                centroids.append(nodes[[i - 1 for i in ids]].mean(axis=0))
+    return np.array(centroids)
+
+
+_cache = {'models': None, 'guard': None, 'mesh': None}
 
 
 def _load():
@@ -44,9 +79,7 @@ def _load():
         from domain_guard import DomainGuard
         _cache['guard'] = DomainGuard()
     if _cache['mesh'] is None:
-        sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'production', 'step15_v1_2', 'runtime'))
-        from predict_field import _mesh
-        _cache['mesh'] = _mesh
+        _cache['mesh'] = torus_mesh
     return _cache['models'], _cache['guard'], _cache['mesh']
 
 
